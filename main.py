@@ -36,13 +36,13 @@ Procedure is to clean the data, remove the punctuation, set to lowercase, and fi
 Then sort the training data based on whether it is a positive or negative review in order
 To preform the Term Frequency Calculations
 """
-i = 0
+#i = 0
 for line in train_data:
     # Based on pos or neg add 1, 0 to Y_train the ï is for the first review
     if line[0] == "1" or line[0] == "ï":
-        fdY_train.append(1)
+        fdY_train.append("+1")
     else:
-        fdY_train.append(0)
+        fdY_train.append("-1")
     # For each line remove special characters and numbers remove stop words and create formatted data
     line = line.translate(str.maketrans('', '', r"!\"#$%&'()*+,./:;<=>?@[\]^_`{|}~ï»¿-0123456789"))
     word_tokens = word_tokenize(line.lower())
@@ -54,12 +54,12 @@ for line in train_data:
     new_line = ' '.join(new_line)
     # Add to X_train
     fdX_train.append(new_line)
-    i += 1
-    if i == 50:
-        break
+    #i += 1
+    #if i == 35:
+    #    break
 
 # Repeat above for test data only adding to X_test
-j = 0
+#j = 0
 for line in test_data:
     line = line.translate(str.maketrans('', '', r"!\"#$%&'()*+,./:;<=>?@[\]^_`{|}~ï»¿-0123456789"))
     word_tokens = word_tokenize(line.lower())
@@ -69,9 +69,9 @@ for line in test_data:
             new_line.append(word)
     new_line = ' '.join(new_line)
     X_test.append(new_line)
-    j += 1
-    if j == 50:
-        break
+    #j += 1
+    #if j == 35:
+    #    break
 
 # Create the data frame of X and Y tests and trains
 vectorizer = TfidfVectorizer(min_df=10, max_df=0.65)
@@ -86,27 +86,28 @@ X_test_tf = vectorizer.transform(X_test)
 X_train_tf_Array = X_train_tf.toarray()
 X_test_tf_Array = X_test_tf.toarray()
 
-cx = cosine_similarity(X, x_train)
-class knn:
-    def __init__(self, k):
-        self.k = k
-    
-    def fit(self, X, y):
-        self.X_train = X
-        self.y_train = y
+def knn():
+    nearest = []
+    i = 0
+    for line in cosine_similarity(X_train_tf_Array, X_test_tf_Array):
+        nearest1 = np.argsort(line)[-1:].tolist()
+        nearest2 = np.argsort(line)[-2:].tolist()
+        nearest3 = np.argsort(line)[-3:].tolist()
+        nearest4 = np.argsort(line)[-4:].tolist()
+        nearest5 = np.argsort(line)[-5:].tolist()
+        labels1 = [fdY_train[i] for i in nearest1]
+        labels2 = [fdY_train[i] for i in nearest2]
+        labels3 = [fdY_train[i] for i in nearest3]
+        labels4 = [fdY_train[i] for i in nearest4]
+        labels5 = [fdY_train[i] for i in nearest5]
+        most_common1 = Counter(labels1).most_common(1)
+        most_common2 = Counter(labels2).most_common(1)
+        most_common3 = Counter(labels3).most_common(1)
+        most_common4 = Counter(labels4).most_common(1)
+        most_common5 = Counter(labels5).most_common(1)
+        i += 1
+        print(most_common1[0][0], most_common2[0][0], most_common3[0][0], most_common4[0][0], most_common5[0][0])
+        if i == 1:
+            break
 
-    def predict(self, X):
-        predicted_labels = [self._predict(x) for x in X]
-
-    def _predict(self, x):
-        similarities = [cosine_similarity(x, x_train) for x_train in self.X_train]
-        k_indicies = np.argsort(similarities)[:self.k]
-        k_labels = [self.y_train[i] for i in k_indicies]
-        most_common = Counter(k_labels).most_common(1)
-        return most_common[0][0]
-
-prediction = knn(k=3)
-prediction.fit(fdX_train, fdY_train)
-predictions = prediction.predict(X_test_tf)
-
-print(predictions)
+knn()
