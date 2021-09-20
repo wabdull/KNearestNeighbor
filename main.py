@@ -49,7 +49,7 @@ for line in train_data:
     new_line = []
     for word in word_tokens:
         if word not in stopwords:
-            new_line.append(stemmer.stem(word))
+            new_line.append(word)
 
     new_line = ' '.join(new_line)
     # Add to X_train
@@ -74,7 +74,7 @@ for line in test_data:
     #    break
 
 # Create the data frame of X and Y tests and trains
-vectorizer = TfidfVectorizer(min_df=10, max_df=0.65)
+vectorizer = TfidfVectorizer(min_df=25, max_df=0.85)
 
 # applying tf idf to training data
 X_train_tf = vectorizer.fit_transform(fdX_train)
@@ -88,26 +88,34 @@ X_test_tf_Array = X_test_tf.toarray()
 
 def knn():
     nearest = []
-    i = 0
-    for line in cosine_similarity(X_train_tf_Array, X_test_tf_Array):
-        nearest1 = np.argsort(line)[-1:].tolist()
-        nearest2 = np.argsort(line)[-2:].tolist()
-        nearest3 = np.argsort(line)[-3:].tolist()
-        nearest4 = np.argsort(line)[-4:].tolist()
-        nearest5 = np.argsort(line)[-5:].tolist()
+    i = 1
+    count = 1
+    negs = 0
+    for line in cosine_similarity(X_test_tf_Array, X_train_tf_Array):
+        nearest1 = np.argsort(line)[-250:].tolist()
+        #nearest2 = np.argsort(line)[-5:].tolist()
+        #nearest3 = np.argsort(line)[-3:].tolist()
+        #nearest4 = np.argsort(line)[-4:].tolist()
+        #nearest5 = np.argsort(line)[-5:].tolist()
         labels1 = [fdY_train[i] for i in nearest1]
-        labels2 = [fdY_train[i] for i in nearest2]
-        labels3 = [fdY_train[i] for i in nearest3]
-        labels4 = [fdY_train[i] for i in nearest4]
-        labels5 = [fdY_train[i] for i in nearest5]
+        #labels2 = [fdY_train[i] for i in nearest2]
+        #labels3 = [fdY_train[i] for i in nearest3]
+        #labels4 = [fdY_train[i] for i in nearest4]
+        #labels5 = [fdY_train[i] for i in nearest5]
         most_common1 = Counter(labels1).most_common(1)
-        most_common2 = Counter(labels2).most_common(1)
-        most_common3 = Counter(labels3).most_common(1)
-        most_common4 = Counter(labels4).most_common(1)
-        most_common5 = Counter(labels5).most_common(1)
-        i += 1
-        print(most_common1[0][0], most_common2[0][0], most_common3[0][0], most_common4[0][0], most_common5[0][0])
-        if i == 1:
-            break
+        #most_common2 = Counter(labels2).most_common(1)
+        #most_common3 = Counter(labels3).most_common(1)
+        #most_common4 = Counter(labels4).most_common(1)
+        #most_common5 = Counter(labels5).most_common(1)
+        
+        print(most_common1[0][0])
+        #if most_common1[0][0] == "-1":
+        #    print (i)
+        #    negs += 1
+        #if(i == 59):
+        #    break
+        #i += 1
+        #print(most_common1[0][0]) #, most_common3[0][0], most_common4[0][0], most_common5[0][0])
+    #print(negs, "50", ".85", "250")
 
 knn()
