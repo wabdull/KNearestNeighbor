@@ -1,19 +1,11 @@
 import numpy as np
 import pandas as pd
-import re
-
-import nltk
+import matplotlib.pyplot as plt
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import MultinomialNB
-from sklearn import metrics
 
-from sklearn.svm import LinearSVC
-from sklearn.metrics import classification_report
-
-from sklearn.model_selection import train_test_split
 
 stopwords = stopwords.words('english')
 # IF NEEDING TO REMOVE WORDS ADD THOSE WORDS TO THE STOPWORDS LIST
@@ -73,18 +65,14 @@ for line in test_data:
 
 
 # Create the data frame of X and Y tests and trains
-#X_train, X_test, y_train, y_test = train_test_split(fdX_train, fdY_train, test_size=.3)
-
 vectorizer = TfidfVectorizer(max_features=2500)
 
 # applying tf idf to training data
 X_train_tf = vectorizer.fit_transform(fdX_train)
-
-# applying tf idf to training data
 X_train_tf = vectorizer.transform(fdX_train)
 
+# The TFIDF of the test data
 X_test_tf = vectorizer.transform(X_test)
 
 
-
-
+print(X_train_tf)
