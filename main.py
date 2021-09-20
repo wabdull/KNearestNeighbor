@@ -63,21 +63,19 @@ for line in test_data:
     new_line = ' '.join(new_line)
     X_test.append(new_line)
 
+
 # Create the data frame of X and Y tests and trains
 vectorizer = TfidfVectorizer(min_df=100, max_df=0.50)
 
-# applying tf idf to training data
+# Use the vectorizer function from sklearn to create the TFIDF of the train and test data
 X_train_tf = vectorizer.fit_transform(fdX_train)
 X_train_tf = vectorizer.transform(fdX_train)
 
-# The TFIDF of the test and train data
 X_test_tf = vectorizer.transform(X_test)
 
+#Format the vectors into arrasy to perform cosine similarity
 X_train_tf_Array = X_train_tf.toarray()
 X_test_tf_Array = X_test_tf.toarray()
-
-print(len(X_train_tf_Array))
-print(len(X_test_tf_Array))
 
 # THIS FINDS THE COSINE SIMILARITY OF ALL
 print(cosine_similarity(X_train_tf_Array, X_test_tf_Array))
